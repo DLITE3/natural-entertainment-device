@@ -1,7 +1,6 @@
 from dotenv import load_dotenv
 load_dotenv()
 import os
-
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
@@ -21,6 +20,12 @@ class SpotifyWebAPIHandler:
        spotify = spotipy.Spotify(client_credentials_managerclient_credentials_manager = client_credentials_manager)
        if(client_credentials_manager == True ):
          return ("success")
+     
+    def search_track_spotify_web_api(spotify,sometext):
+         search_str = sometext   #chatGPTからのテキストを挿入する#
+         results = spotify.search(q=search_str, limit=20)
+         for idx, track in enumerate(results['tracks']['items']):
+            print(f"{idx:03d}\t{track['name']}\t")
        
          
 
