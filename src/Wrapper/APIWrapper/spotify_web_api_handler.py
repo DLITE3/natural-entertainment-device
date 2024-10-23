@@ -21,7 +21,7 @@ class SpotifyWebAPIHandler:
        if(client_credentials_manager == True ):
          return ("success")
      
-    def search_track_spotify_web_api(spotify=spotipy.Spotify):
+    def search_track_function(spotify=spotipy.Spotify):
          #search_str = sometext #chatGPTからのテキストを挿入する#
          results = spotify.search(q="冬の景色", limit=20, type='track', market ='JP')  #qにはキーワードを入れる。
          for idx, track in enumerate(results['tracks']['items']):
