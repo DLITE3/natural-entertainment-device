@@ -21,10 +21,11 @@ class SpotifyWebAPIHandler:
     #    if(client_credentials_manager == True ):
     #     return ("success")
        
-    def connected_to_spotify_web_api( self,client_id, client_secret):
+    def connected_to_spotify_web_api( self):
         try:
-            client_credentials_manager = spotipy.oauth2.SpotifyClientCredentials(client_id, client_secret)
+            client_credentials_manager = spotipy.oauth2.SpotifyClientCredentials()
             spotify = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+             
             # 正常にクライアントが作成できたか確認
             if spotify:
                 return "success"
@@ -33,6 +34,9 @@ class SpotifyWebAPIHandler:
             print(f"Error connecting to Spotify: {e}")
             return "failure"
 
+
+sample: SpotifyWebAPIHandler = SpotifyWebAPIHandler()
+sample.connected_to_spotify_web_api( )
        
     #    sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=client_id, client_secret=client_secret))
     
