@@ -13,10 +13,20 @@ client_id = handler.get_client_id()
 client_secret= handler.get_client_secret()
 	
  
-def test_getAPI():
+def test_get_apotify_api_mock_200(mocker):
+    """
+    関数がsuccessを返すようする。
+    """
+    status_code = "success"
+    self = "you"
+    mocker.patch("src.Wrapper.APIWrapper.spotify_web_api_handler", return_value=status_code)
+    assert handler.connected_to_spotify_web_api(  ) == status_code
 
-    #  assert SpotifyWebAPIHandler.connected_to_spotify_web_api(\
-    #     client_id , client_secret ) == (SpotifyWebAPIHandler.get_client_id, SpotifyWebAPIHandler.get_client_secret)
-    assert handler.connected_to_spotify_web_api(client_id,client_secret) == ("success")
-    assert handler.connected_to_spotify_web_api(client_id, client_secret) == ("failure")
-    
+def test_get_apotify_api_mock_404(mocker):
+    """
+    関数がfailureを返すようする。
+    """
+    status_code = "failure"
+    self = "who"
+    mocker.patch("src.Wrapper.APIWrapper.spotify_web_api_handler", return_value=status_code)
+    assert handler.connected_to_spotify_web_api( ) == status_code
