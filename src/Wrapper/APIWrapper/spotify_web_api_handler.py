@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import os
+import time
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
@@ -90,6 +91,14 @@ class SpotifyWebAPIHandler:
                 # 再生を開始
                 self.sp.start_playback(device_id=device_id, uris=[f"spotify:track:{track_id}"])
                 print("トラックを再生しています。")
+                
+                # 再生状態を確認し、曲が終わったら停止
+                while True:
+                    playback_info = self.sp.current_playback()
+                    if playback_info is None or playback_info['is_playing'] is False:
+                        print("曲が終了しました。")
+                        break
+                    time.sleep(1)  # 1秒ごとに状態をチェック
             else:
                 print("再生できるデバイスがありません。")
         except spotipy.exceptions.SpotifyException as e:
@@ -104,7 +113,7 @@ class SpotifyWebAPIHandler:
 
 
 
-""" インスタンスを作成し、曲を検索して再生してみる
+"""　インスタンスを作成し、曲を検索して再生してみる
 
 spotify_handler = SpotifyWebAPIHandler()
 query = "henceforthorange"  # 検索したい曲名
@@ -112,4 +121,5 @@ query = "henceforthorange"  # 検索したい曲名
 track_info = spotify_handler.search_track(query)
 if track_info:
     spotify_handler.play_track(track_info['id'])
+
 """
