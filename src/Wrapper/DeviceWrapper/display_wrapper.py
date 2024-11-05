@@ -3,6 +3,7 @@ from busio import SPI
 from digitalio import DigitalInOut
 import board
 from PIL import Image
+import cv2
 
 class DisplayWrapper:
     # コンストラクタ
@@ -39,14 +40,23 @@ class DisplayWrapper:
     def show_image(self, image) -> None:
         if image is None or not self.connected:
             return
-        image = Image.fromarray(image)
-        # Resize to screen size
-        image = image.resize(self.IMAGE_SIZE, resample=Image.LANCZOS)
 
-        # Display image
-        self.disp.image(image)
+        # OpenCVで読み込んだ画像はBGR形式なので、RGBに変換
+        image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+        # NumPy配列をPIL画像に変換
+        pil_image = Image.fromarray(image_rgb)
+
+        # 必要に応じて上下反転
+        pil_image = pil_image.transpose(Image.FLIP_TOP_BOTTOM)
+
+        # 画面サイズにリサイズ
+        pil_image = pil_image.resize(self.IMAGE_SIZE, resample=Image.LANCZOS)
+
+        if self.connected:
+            # 画像を表示
+            self.disp.image(pil_image)
 
     def stop(self) -> None:
         if self.connected:
             self.disp.fill(0)
-            self.disp.show()
