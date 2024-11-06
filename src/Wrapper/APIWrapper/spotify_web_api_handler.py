@@ -3,7 +3,7 @@ import os
 import time
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-
+from spotipy.oauth2 import SpotifyClientCredentials
 # 環境変数をロード
 load_dotenv()
 
@@ -25,6 +25,12 @@ class SpotifyWebAPIHandler:
             cache_path=".spotify_token_cache"  # トークンキャッシュファイル
         ))
 
+    def get_client_id(self):
+        return self.client_id
+
+    def get_client_secret(self):
+        return self.client_secret
+        
     def get_available_device_id(self):
         """
         利用可能なデバイスIDを取得。複数デバイスがある場合は手動選択。
