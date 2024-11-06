@@ -3,6 +3,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import pytest
 import os
 import sys
+from unittest.mock import MagicMock
 sys.path.append(os.getcwd())
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../')))
 from  src.Wrapper.APIWrapper.spotify_web_api_handler import * #テストするファイルを参照
@@ -17,9 +18,13 @@ client_uri = handler.get_redirect_uri()
 
 def test_play_track_mock_200(mocker):
     """
-    sample2関数が200を返すようする。
+    play_trackメソッドがステータスコード200を返すことを確認するテスト
     """
-    status_code = 200
-    track_id = "https://hogehoge.com"
-    mocker.patch("handler.play_track", return_value=status_code)
-    assert handler.play_track(track_id) == status_code
+    # モック用のトラックID
+    track_id = "sample_track_id"
+    # Spotify API呼び出しをモック
+    mocker.patch.object(handler.sp, "start_playback", return_value=None)
+    # 実際の再生を防ぎ、関数が問題なく実行されることを確認
+    response = handler.play_track(track_id)
+    assert response == 200  # ここはエラーハンドリングを追加する場合の例です
+
