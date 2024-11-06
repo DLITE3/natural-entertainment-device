@@ -3,7 +3,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import pytest
 import os
 import sys
-from unittest.mock import MagicMock
+from unittest.mock import  MagicMock
 sys.path.append(os.getcwd())
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../')))
 from  src.Wrapper.APIWrapper.spotify_web_api_handler import * #テストするファイルを参照
