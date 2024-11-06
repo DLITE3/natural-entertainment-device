@@ -8,44 +8,48 @@ sys.path.append(os.getcwd())
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../')))
 from  src.Wrapper.APIWrapper.spotify_web_api_handler import * #テストするファイルを参照
 
-
 @pytest.fixture
 def spotify_handler():
+    """SpotifyWebAPIHandlerのインスタンスを返すfixture"""
     return SpotifyWebAPIHandler()
 
-@patch("src.Wrapper.APIWrapper.spotify_web_api_handler.SpotifyWebAPIHandler.get_available_device_id")  # メソッドをモック
-@patch("src.Wrapper.APIWrapper.spotify_web_api_handler.Spotify")  # Spotifyのインスタンスをモック
-def test_get_available_device_id(mock_spotify, mock_get_device_id, spotify_handler):
-    # モックデバイス情報を設定
-    mock_device_response = {
+def test_get_available_device_id_with_smartphone(spotify_handler):
+    """スマートフォンデバイスが見つかる場合のテスト"""
+    # モックデータ
+    mock_devices = {
         'devices': [
-            {'id': 'device1', 'name': 'Device 1', 'type': 'phone'},
-            {'id': 'device2', 'name': 'Device 2', 'type': 'laptop'}
+            {'name': 'PC', 'type': 'Computer', 'id': 'pc123'},
+            {'name': 'Smartphone', 'type': 'Smartphone', 'id': 'phone123'},
+            {'name': 'Speaker', 'type': 'Speaker', 'id': 'speaker123'}
         ]
     }
 
-    # Spotifyインスタンスのdevicesメソッドをモック
-    mock_spotify.return_value.devices.return_value = mock_device_response
-
-    # ユーザー入力をモック
-    with patch("builtins.input", return_value="1"):  # ユーザーが "1" を選択したと仮定
+    # sp.devices() をモックして上記のデータを返す
+    with patch.object(spotify_handler.sp, 'devices', return_value=mock_devices):
         device_id = spotify_handler.get_available_device_id()
-    
-    # get_available_device_idが期待通りに動作するかを確認
-    assert device_id == 'device1'  # "1"が選ばれたのでdevice1が返るはず
+        assert device_id == 'phone123'  # スマートフォンが選ばれることを確認
 
-@patch("src.Wrapper.APIWrapper.spotify_web_api_handler.SpotifyWebAPIHandler.get_available_device_id")  # メソッドをモック
-@patch("src.Wrapper.APIWrapper.spotify_web_api_handler.Spotify")  # Spotifyのインスタンスをモック
-def test_no_devices(mock_spotify, mock_get_device_id, spotify_handler):
-    # デバイスがない場合のモック
-    mock_device_response = {'devices': []}
-    
-    # Spotifyインスタンスのdevicesメソッドをモック
-    mock_spotify.return_value.devices.return_value = mock_device_response
-    
-    # デバイスがない場合にget_available_device_idがどう動作するかテスト
-    with patch("builtins.input", return_value="1"):
+def test_get_available_device_id_without_smartphone(spotify_handler):
+    """スマートフォンデバイスが見つからない場合のテスト"""
+    # モックデータ
+    mock_devices = {
+        'devices': [
+            {'name': 'PC', 'type': 'Computer', 'id': 'pc123'},
+            {'name': 'Speaker', 'type': 'Speaker', 'id': 'speaker123'}
+        ]
+    }
+
+    # sp.devices() をモックして上記のデータを返す
+    with patch.object(spotify_handler.sp, 'devices', return_value=mock_devices):
         device_id = spotify_handler.get_available_device_id()
-    
-    # デバイスがない場合はNoneを返すべき
-    assert device_id is None
+        assert device_id is None  # スマートフォンが見つからないのでNoneが返る
+
+def test_get_available_device_id_no_devices(spotify_handler):
+    """デバイスが存在しない場合のテスト"""
+    # モックデータ（デバイスなし）
+    mock_devices = {'devices': []}
+
+    # sp.devices() をモックして上記のデータを返す
+    with patch.object(spotify_handler.sp, 'devices', return_value=mock_devices):
+        device_id = spotify_handler.get_available_device_id()
+        assert device_id is None  # デバイスがないのでNoneが返る
