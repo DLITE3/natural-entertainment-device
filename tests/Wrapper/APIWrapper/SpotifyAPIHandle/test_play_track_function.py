@@ -28,5 +28,7 @@ def test_play_track(mocker):
     # play_trackメソッドを実行
     spotify_handler.play_track(track_id)
     
-    # start_playbackが正しいパラメータで呼び出されたかを確認
+    # start_playback
+    # が正しいパラメータで呼び出されたかを確認
     mock_start_playback.assert_called_once_with(device_id="mock_device_id", uris=[f"spotify:track:{track_id}"])
+    

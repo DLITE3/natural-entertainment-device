@@ -39,3 +39,4 @@ def test_search_track(mocker):
     
     # 結果が期待通りか確認
     assert result == {'id': 'mock_track_id', 'name': 'Mock Track Name'}
+    assert result == {}
