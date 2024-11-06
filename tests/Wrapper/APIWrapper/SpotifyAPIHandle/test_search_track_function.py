@@ -7,24 +7,35 @@ from unittest.mock import MagicMock
 sys.path.append(os.getcwd())
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../')))
 from  src.Wrapper.APIWrapper.spotify_web_api_handler import * #テストするファイルを参照
-import requests
+from unittest.mock import MagicMock
 
 #インスタンスを作成
-handler = SpotifyWebAPIHandler()
-client_id = handler.get_client_id()
-client_secret = handler.get_client_secret()
-client_uri = handler.get_redirect_uri()
+spotify_handler = SpotifyWebAPIHandler()
 
-
-def test_play_track_mock_200(mocker):
+def test_search_track(mocker):
     """
-    play_trackメソッドがステータスコード200を返すことを確認するテスト
+    search_trackメソッドをモックしてテストする
     """
-    # モック用のトラックID
-    track_id = "sample_track_id"
-    # Spotify API呼び出しをモック
-    mocker.patch.object(handler.sp, "start_playback", return_value=None)
-    # 実際の再生を防ぎ、関数が問題なく実行されることを確認
-    response = handler.play_track(track_id)
-    assert response == 200  # ここはエラーハンドリングを追加する場合の例です
-
+    # モック用のクエリ
+    query = "sample song"
+    
+    # モックで返す検索結果のデータを定義
+    mock_search_result = {
+        'tracks': {
+            'items': [
+                {
+                    'id': 'mock_track_id',
+                    'name': 'Mock Track Name'
+                }
+            ]
+        }
+    }
+    
+    # Spotifyのsearchメソッドをモックして、モックデータを返すように設定
+    mocker.patch.object(spotify_handler.sp, "search", return_value=mock_search_result)
+    
+    # search_trackメソッドを実行し、結果を取得
+    result = spotify_handler.search_track(query)
+    
+    # 結果が期待通りか確認
+    assert result == {'id': 'mock_track_id', 'name': 'Mock Track Name'}
