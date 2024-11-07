@@ -20,7 +20,6 @@ try:
         # OpenCVで表示するためにバイトデータをデコード
         image_array = np.frombuffer(image_data, np.uint8)
         image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
-
         # 画像を表示
         cv2.imshow("Captured Image", image)
 
