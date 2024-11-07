@@ -28,5 +28,5 @@ class ImageToSongAPIWrapper:
             song_list = json.loads(json_string)
             return {"song_list": song_list, "status_code": response.status_code}
         else:
-            print("JSON配列部分が見つかりませんでした。")
+            # print("JSON配列部分が見つかりませんでした。")
             return {"song_list": None, "status_code": response.status_code}

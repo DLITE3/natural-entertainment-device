@@ -10,7 +10,7 @@ import asyncio
 async def main():
     image_to_song_api_wrapper: ImageToSongAPIWrapper = ImageToSongAPIWrapper()
     image = await asyncio.to_thread(cv2.imread, "images/image.jpg")
-    print(image_to_song_api_wrapper.image_to_song(image))
+    print(image_to_song_api_wrapper.image_to_song(image)["song_list"])
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -56,6 +56,7 @@ class SpotifyWebAPIWrapper:
             self.sp.start_playback(device_id=device_id, uris=[f"spotify:track:{track_id}"])
             # リピートしない
             self.sp.repeat('off')
+            self.sp.volume(100, device_id=device_id)
             # print(f"Playing track {track_id} on device {device_id}")
             return {"status_code": 200, "message": f"Playing track {track_id} on device {device_id}"}
         except Exception as e:

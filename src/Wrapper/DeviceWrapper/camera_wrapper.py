@@ -2,6 +2,8 @@ from picamera2 import Picamera2
 from PIL import Image
 from io import BytesIO
 from time import sleep
+import cv2
+import numpy as np
 
 class CameraWrapper:
     def __init__(self):
@@ -23,6 +25,14 @@ class CameraWrapper:
         byte_io.seek(0)
 
         return byte_io.getvalue()
+    
+    def take_picture(self) -> None:
+        image_data = self.capture_image()
+        image_array = np.frombuffer(image_data, np.uint8)
+        image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+        # 右回転90度で保存
+        image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+        cv2.imwrite("image.jpg", image)
     
     def stop(self) -> None:
         self.camera.stop()
