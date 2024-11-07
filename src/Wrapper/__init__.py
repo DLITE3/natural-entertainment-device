@@ -1,1 +1,1 @@
-from src.Wrapper.APIWrapper import *
+from src.Wrapper.DeviceWrapper import *
