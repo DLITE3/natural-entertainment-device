@@ -6,7 +6,7 @@ from src.Wrapper.APIWrapper.spotify_web_api_wrapper import SpotifyWebAPIWrapper
 
 def main():
     spotify_handler = SpotifyWebAPIWrapper()
-    query = "henceforthorange"  # 検索したい曲名
+    query = "ルマ"  # 検索したい曲名
     # 曲を検索し、結果があれば再生
     track_info = spotify_handler.search_track(query)
     print(track_info)
