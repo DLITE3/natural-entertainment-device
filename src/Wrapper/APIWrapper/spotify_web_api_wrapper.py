@@ -2,6 +2,7 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import os
 from dotenv import load_dotenv
+import time
 
 load_dotenv()
 
@@ -38,11 +39,12 @@ class SpotifyWebAPIWrapper:
         if not device_list:
             # print("No available devices found.")
             return None
-        for device in device_list:
-            print(f"Device: {device['name']} (ID: {device['id']})")
+        # for device in device_list:
+        #     print(f"Device: {device['name']} (ID: {device['id']})")
         return device_list
     
-    def serch_devie(self, device_name, device_list):
+    # デバイス名でIDを検索するメソッド
+    def search_device(self, device_name: str, device_list):
         for device in device_list:
             if device['type'] == device_name:
                 return device['id']
@@ -52,7 +54,20 @@ class SpotifyWebAPIWrapper:
     def play_on_device(self, track_id, device_id):
         try:
             self.sp.start_playback(device_id=device_id, uris=[f"spotify:track:{track_id}"])
+            # リピートしない
+            self.sp.repeat('off')
             # print(f"Playing track {track_id} on device {device_id}")
-            return True
+            return {"status_code": 200, "message": f"Playing track {track_id} on device {device_id}"}
         except Exception as e:
-            return (f"Error playing track: {e}")
+            # print(f"Error playing track: {e}")
+            return {"status_code": 500, "message": f"Error playing track: {e}"}
+
+    # 再生を停止するメソッド
+    def stop_playback(self, device_id):
+        try:
+            self.sp.pause_playback(device_id=device_id)
+            # print(f"Playback stopped on device {device_id}")
+            return {"status_code": 200, "message": f"Playback stopped on device {device_id}"}
+        except Exception as e:
+            # print(f"Error stopping playback: {e}")
+            return {"status_code": 500, "message": f"Error stopping playback: {e}"}
