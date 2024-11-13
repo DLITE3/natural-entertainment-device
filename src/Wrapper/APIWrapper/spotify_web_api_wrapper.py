@@ -11,12 +11,13 @@ class SpotifyWebAPIWrapper:
         self.client_secret = os.getenv('SPOTIFY_CLIENT_SECRET')
         self.redirect_uri = os.getenv('SPOTIFY_REDIRECT_URI')
         self.scope = 'user-library-read user-modify-playback-state user-read-playback-state'
-        
         # Spotify認証
         self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=self.client_id,
                                                            client_secret=self.client_secret,
                                                            redirect_uri=self.redirect_uri,
-                                                           scope=self.scope))
+                                                           scope=self.scope,
+                                                           cache_path="/tmp/spotify_cache"))
+         
 
     # 曲名でトラックIDを検索するメソッド
     def search_track(self, track_name):
@@ -42,7 +43,7 @@ class SpotifyWebAPIWrapper:
             print(f"Device: {device['name']} (ID: {device['id']})")
         return device_list
     
-    def serch_devie(self, device_name, device_list):
+    def search_device(self, device_name, device_list):
         for device in device_list:
             if device['type'] == device_name:
                 return device['id']

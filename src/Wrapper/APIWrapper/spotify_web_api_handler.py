@@ -1,125 +1,129 @@
+#NTT名古屋用にスマートフォンから曲が再生されるように設定
+
 from dotenv import load_dotenv
 import os
-import time
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from spotipy.oauth2 import SpotifyClientCredentials
-# 環境変数をロード
+
+# 環境変数の読み込み
 load_dotenv()
 
 class SpotifyWebAPIHandler:
     def __init__(self):
+        # Spotify APIクライアント情報を環境変数から取得
         self.client_id = os.getenv('SPOTIFY_CLIENT_ID')
         self.client_secret = os.getenv('SPOTIFY_CLIENT_SECRET')
         self.redirect_uri = os.getenv('SPOTIFY_REDIRECT_URI')
 
-        # スコープに再生コントロールとライブラリアクセスを追加
-        scope = "user-read-playback-state user-modify-playback-state user-library-read app-remote-control"
+        # 認証に必要なスコープ
+        self.scope = "user-read-playback-state user-modify-playback-state user-library-read app-remote-control"
 
-        # OAuth認証をセットアップ（キャッシュ機能付き）
-        self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
+        # Spotify API認証ハンドラーを初期化
+        self.auth_manager = self.initialize_auth_manager()
+        self.sp = spotipy.Spotify(auth_manager=self.auth_manager)
+
+    def initialize_auth_manager(self):
+        """
+        SpotifyOAuthオブジェクトを初期化し、キャッシュ済みトークンのチェックや取得を行います。
+        """
+        auth_manager = SpotifyOAuth(
             client_id=self.client_id,
             client_secret=self.client_secret,
             redirect_uri=self.redirect_uri,
-            scope=scope,
-            cache_path=".spotify_token_cache"  # トークンキャッシュファイル
-        ))
+            scope=self.scope,
+            cache_path=".spotify_token_cache"  # 認証情報をキャッシュするファイル
+        )
+
+        # キャッシュにトークンがあるかを確認し、存在しない場合は新しい認証を実行
+        token_info = auth_manager.get_cached_token()
+        if not token_info:
+            print("キャッシュされているトークンが見つかりません。認証を実行中...")
+            token_info = auth_manager.get_access_token(as_dict=False)
+
+        #print("トークンが正常に取得されました。")
+        return auth_manager
 
     def get_client_id(self):
+        """クライアントIDを取得"""
         return self.client_id
 
     def get_client_secret(self):
+        """クライアントシークレットを取得"""
         return self.client_secret
-        
+
+    def get_redirect_uri(self):
+        """リダイレクトURIを取得"""
+        return self.redirect_uri
+
     def get_available_device_id(self):
         """
-        利用可能なデバイスIDを取得。複数デバイスがある場合は手動選択。
+        利用可能なデバイスIDを取得。複数デバイスがある場合はスマートフォンを優先して選択。
         
         Returns:
-        - str: 選択されたデバイスのID
+            str: 利用可能なデバイスID
         """
         try:
             devices = self.sp.devices()
             if devices['devices']:
-                print("利用可能なデバイス:")
-                for idx, device in enumerate(devices['devices']):
-                    print(f"{idx + 1}: {device['name']} - {device['type']}")
-
-                choice = int(input("再生するデバイス番号を選んでください: ")) - 1
-                return devices['devices'][choice]['id']
+                for device in devices['devices']:
+                    if device['type'] == 'Smartphone':
+                        return device['id']
+                print("スマートフォンデバイスが見つかりませんでした。")
             else:
-                print("再生可能なデバイスが見つかりません。Spotifyアプリを起動してください。")
-                return None
+                print("利用可能なデバイスが見つかりません。Spotifyアプリを起動してください。")
         except Exception as e:
-            print(f"エラーが発生しました（デバイス取得中）: {e}")
-            return None
+            print(f"デバイス取得中にエラーが発生しました: {e}")
+        return None
 
     def search_track(self, query):
         """
-        指定したクエリのトラックを検索し、最初の結果を返す。
+        Spotify上で曲を検索し、最初の検索結果を返す。
         
         Args:
-        - query (str): 検索したい曲のクエリ
+            query (str): 曲名またはアーティスト名
         
         Returns:
-        - dict: トラック情報（IDと名前）
+            dict: トラック情報（IDと名前）
         """
         try:
-            # トラックを検索
             results = self.sp.search(q=query, type="track", limit=1)
             if results['tracks']['items']:
-                # 最初のトラックを取得
                 first_track = results['tracks']['items'][0]
-                track_info = {
-                    'id': first_track['id'],
-                    'name': first_track['name']
-                }
-                print(f"検索結果: {track_info['name']}")
-                return track_info
-            else:
-                print("指定した曲が見つかりませんでした。")
-                return None
+                return {'id': first_track['id'], 'name': first_track['name']}
+            print("指定した曲が見つかりませんでした。")
         except Exception as e:
-            print(f"エラーが発生しました（検索中）: {e}")
-            return None
+            print(f"曲検索中にエラーが発生しました: {e}")
+        return None
 
     def play_track(self, track_id):
         """
-        指定したトラックIDを再生する。
+        指定されたトラックIDを再生する。
         
         Args:
-        - track_id (str): 再生したいトラックのID
+            track_id (str): 再生するトラックのID
         """
+        device_id = self.get_available_device_id()
+        if not device_id:
+            print("再生できるデバイスがありません。")
+            return
+
         try:
-            # 利用可能なデバイスIDを取得
-            device_id = self.get_available_device_id()
-            if device_id:
-                # 再生を開始
-                self.sp.start_playback(device_id=device_id, uris=[f"spotify:track:{track_id}"])
-                print("トラックを再生しています。")
-                
-                # 再生状態を確認し、曲が終わったら停止
-                while True:
-                    playback_info = self.sp.current_playback()
-                    if playback_info is None or playback_info['is_playing'] is False:
-                        print("曲が終了しました。")
-                        break
-                    time.sleep(1)  # 1秒ごとに状態をチェック
-            else:
-                print("再生できるデバイスがありません。")
+            self.sp.start_playback(device_id=device_id, uris=[f"spotify:track:{track_id}"])
+            #print("トラックを再生しています。")
+            return 200
         except spotipy.exceptions.SpotifyException as e:
             if e.http_status == 401:
                 print("認証エラー: トークンが無効または期限切れです。再認証が必要です。")
             elif e.http_status == 403:
                 print("再生エラー: プレミアムアカウントが必要です。")
             else:
-                print(f"Spotify APIでエラーが発生しました: {e}")
+                print(f"Spotify APIエラーが発生しました: {e}")
         except Exception as e:
             print(f"エラーが発生しました: {e}")
 
 
 
-"""　インスタンスを作成し、曲を検索して再生してみる
+#インスタンスを作成し、曲を検索して再生してみる
 
 spotify_handler = SpotifyWebAPIHandler()
 query = "henceforthorange"  # 検索したい曲名
@@ -128,4 +132,4 @@ track_info = spotify_handler.search_track(query)
 if track_info:
     spotify_handler.play_track(track_info['id'])
 
-"""
+
