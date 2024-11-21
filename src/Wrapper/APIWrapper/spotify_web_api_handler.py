@@ -124,12 +124,12 @@ class SpotifyWebAPIHandler:
 
 
 #インスタンスを作成し、曲を検索して再生してみる
-"""
+
 spotify_handler = SpotifyWebAPIHandler()
 query = "henceforthorange"  # 検索したい曲名
 # 曲を検索し、結果があれば再生
 track_info = spotify_handler.search_track(query)
 if track_info:
     spotify_handler.play_track(track_info['id'])
-"""
+
 
