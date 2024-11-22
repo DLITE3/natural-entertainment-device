@@ -83,29 +83,3 @@ class ConvertSoundToLanguage:
 
 
 
-"""
-# 使用例
-if __name__ == "__main__":
-    # 音声ファイルのパス
-    audio_path = 'light_rain_thunder1.wav'
-
-    # クラスのインスタンス化
-    converter = ConvertSoundToLanguage(audio_path)
-
-    # 音声データの読み込み
-    converter.load_audio()
-
-    # モックAPIの設定
-    mock_gpt_api = Mock()
-    mock_gpt_api.return_value = "この音声は静かな雨と雷の音を含む環境音です。おそらく森の中の夕方の風景と推測されます。"
-
-    # 指示文を定義
-    gpt_prompt = "この特徴量から、元の音源の景色を1つに特定してみてください。特定できなくても、1つに絞ってください。"
-
-    # GPTモックAPIを使用してレスポンスを取得
-    gpt_response = converter.send_to_gpt_mock(mock_gpt_api, gpt_prompt)
-
-    # 結果を表示
-    print("=== GPTからのレスポンス ===")
-    print(gpt_response)
-"""
