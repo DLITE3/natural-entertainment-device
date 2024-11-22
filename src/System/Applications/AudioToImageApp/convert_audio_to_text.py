@@ -3,6 +3,7 @@ import numpy as np
 import requests
 from dotenv import load_dotenv
 import os
+import json  # jsonモジュールのインポート
 
 # .envファイルの読み込み
 load_dotenv()
@@ -69,7 +70,8 @@ class ConvertSoundToText:
             "Energy Min": np.min(self.energy),
         }
 
-        return results
+        # 結果をJSON形式で返す
+        return json.dumps(results, indent=4)
 
     @staticmethod
     def post_request(query: str):
