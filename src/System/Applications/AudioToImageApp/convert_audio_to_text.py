@@ -1,14 +1,13 @@
 import librosa
 import numpy as np
-import requests
-from dotenv import load_dotenv
+import sys
 import os
-import json  # jsonモジュールのインポート
+sys.path.append(os.getcwd())
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../')))
+from src.Wrapper.APIWrapper.openai_api_handler import OpenAIAPIHandler
 
-# .envファイルの読み込み
-load_dotenv()
 
-class ConvertSoundToText:
+class ConvertSoundToLanguage:
     def __init__(self, audio_path):
         """
         初期化メソッド
@@ -70,26 +69,14 @@ class ConvertSoundToText:
             "Energy Min": np.min(self.energy),
         }
 
-        # 結果をJSON形式で返す
-        return json.dumps(results, indent=4)
+        return results
 
-    @staticmethod
-    def post_request(query: str):
-        """
-        APIリクエストを送信
-        :param query: APIに送信するクエリ
-        """
-        # 環境変数からAPIのURLを取得
-        url = os.getenv("STABLE_DIFFUSION_API_URL")  # .envから読み取る
+    def send_to_gpt(self, results):
+        
+        #特徴量を引数とし、GPTへリクエストを送る    
+        
+        response = OpenAIAPIHandler.post_request(self, str(results))
+        return response
 
-        if not url:
-            raise ValueError("STABLE_DIFFUSION_API_URLが設定されていません")
 
-        # POSTリクエストを送信
-        response = requests.post(
-            url,
-            json={"query": query}
-        )
 
-        # レスポンスの内容を返す
-        return response.json()
