@@ -23,6 +23,8 @@ class ConvertSoundToLanguage:
         self.spectral_flatness = None  # スペクトルフラットネス
         self.energy = None  # エネルギー
 
+        self.api_handler = OpenAIAPIHandler()
+
     def load_audio(self):
         """
         音声データを読み込む
@@ -74,8 +76,7 @@ class ConvertSoundToLanguage:
     def send_to_gpt(self, results):
         
        #特徴量を引数とし、GPTへリクエストを送る    
-       handler = OpenAIAPIHandler()  # インスタンス生成
-       response = handler.post_request(str(results))
+       response = self.api_handler.post_request(str(results))
        return response
 
 
