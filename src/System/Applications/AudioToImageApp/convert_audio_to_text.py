@@ -73,10 +73,10 @@ class ConvertSoundToLanguage:
 
     def send_to_gpt(self, results):
         
-        #特徴量を引数とし、GPTへリクエストを送る    
-        
-        response = OpenAIAPIHandler.post_request(self, str(results))
-        return response
+       #特徴量を引数とし、GPTへリクエストを送る    
+       handler = OpenAIAPIHandler()  # インスタンス生成
+       response = handler.post_request(str(results))
+       return response
 
 
 
