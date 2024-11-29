@@ -5,6 +5,7 @@ import os
 sys.path.append(os.getcwd())
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../')))
 from src.Wrapper.APIWrapper.openai_api_handler import OpenAIAPIHandler
+import json
 
 
 class ConvertSoundToLanguage:
@@ -56,19 +57,19 @@ class ConvertSoundToLanguage:
 
         # 特徴量のまとめ
         results = {
-            "Spectrogram Max (dB)": np.max(self.spectrogram),
-            "Spectrogram Min (dB)": np.min(self.spectrogram),
-            "Envelope Mean": np.mean(self.envelope),
-            "Envelope Max": np.max(self.envelope),
-            "Zero Crossing Rate Mean": np.mean(self.zero_crossings),
-            "Zero Crossing Rate Max": np.max(self.zero_crossings),
-            "Spectral Centroid Mean (Hz)": np.mean(self.spectral_centroid),
-            "Spectral Centroid Max (Hz)": np.max(self.spectral_centroid),
-            "Spectral Flatness Mean": np.mean(self.spectral_flatness),
-            "Spectral Flatness Max": np.max(self.spectral_flatness),
-            "Energy Mean": np.mean(self.energy),
-            "Energy Max": np.max(self.energy),
-            "Energy Min": np.min(self.energy),
+            "スペクトログラムの最大値": np.max(self.spectrogram),
+            "スペクトログラムの最小値": np.min(self.spectrogram),
+            "エンベロープの平均強度": np.mean(self.envelope),
+            "エンベロープの最大強度": np.max(self.envelope),
+            "ゼロ交差率の平均": np.mean(self.zero_crossings),
+            "ゼロ交差率の最大": np.max(self.zero_crossings),
+            "スペクトル重心の平均": np.mean(self.spectral_centroid),
+            "スペクトル重心の最大": np.max(self.spectral_centroid),
+            "スペクトルフラットネスの平均": np.mean(self.spectral_flatness),
+            "スペクトルフラットネスの最大": np.max(self.spectral_flatness),
+            "エネルギーの平均": np.mean(self.energy),
+            "エネルギーの最大": np.max(self.energy),
+            "エネルギーの最小": np.min(self.energy),
         }
 
         return results
@@ -76,8 +77,8 @@ class ConvertSoundToLanguage:
     def send_to_gpt(self, results):
         
        #特徴量を引数とし、GPTへリクエストを送る    
-       response = self.api_handler.post_request(str(results))
-       return response
-
-
-
+       response = self.api_handler.post_request(str(results) + "この音からどのような感情を受け取りますか？\
+                                                テキストをそのままstable diffusionに入力したいので、特徴量の名称は言わず、英語で答えてください\
+                                                「this sound」という言葉もいりません。\
+                                                そして、感情を表す文のみをstable diffusionが入力しやすい形で答えてください。")
+       return response.text
