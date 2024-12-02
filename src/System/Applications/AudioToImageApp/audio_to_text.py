@@ -1,15 +1,15 @@
 from pathlib import Path
 import sys
-sys.path.append(str(Path(__file__).resolve().parent.parent.parent.parent))
+sys.path.append(str(Path(__file__).resolve().parent.parent.parent.parent.parent))
 
-from src.Wrapper.APIWrapper.openai_api_handler import OpenAIAPIHandler
+from src.Wrapper.APIWrapper.openai_api_wrapper import OpenAIAPIWrapper
 
 import librosa
 import numpy as np
 import os
 import json
 
-class ConvertSoundToLanguage:
+class AudioToText:
     def __init__(self):
         """
         初期化メソッド
@@ -24,7 +24,7 @@ class ConvertSoundToLanguage:
         self.spectral_flatness = None  # スペクトルフラットネス
         self.energy = None  # エネルギー
 
-        self.api_handler = OpenAIAPIHandler()
+        self.open_ai_api_wrapper = OpenAIAPIWrapper()
 
     def load_audio(self, audio_path: str) -> None:
         """
@@ -79,12 +79,14 @@ class ConvertSoundToLanguage:
 
         return results
 
-    def send_to_gpt(self, audio_analyzing_data: str) -> str:   
+    def audio_analyzing_data_to_text(self, audio_analyzing_data: str) -> str:   
         #特徴量を引数とし、GPTへリクエストを送る    
-        response = self.api_handler.post_request(
+        response = self.open_ai_api_wrapper.post_request(
             str(audio_analyzing_data) + \
-            "These are the results of analyzing the spectrum and energy of recorded environmental sounds. \
-            Please briefly answer how you perceive the sound, using emotional expressions. \
-            Please also take this into account as the results will be input into the stable diffusion prompts to generate the images."
+            "\
+                This is the result of analyzing the spectrum and energy of recorded environmental sounds.\
+                Describe this sound in 30 words or less in emotional terms.\
+                Please take into account that this result will be entered into the “Stable diffusion api” prompt to generate an image.\
+            "
         )
         return response.text

@@ -1,2 +1,2 @@
 from System.Applications.app import *
-from System.Applications.image_to_music_app import *
+from System.Applications.audio_to_image_app import *
