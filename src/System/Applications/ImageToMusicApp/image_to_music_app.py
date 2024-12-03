@@ -16,6 +16,7 @@ class ImageToMusicApp(App):
         self.pins = [17, 22, 23, 27]
         self.buttons = ButtonWrapper(self.pins)
         self.buttons_data = None
+        self.display = DisplayWrapper()
         
     
     def run(self) -> None:

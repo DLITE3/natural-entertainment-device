@@ -10,7 +10,7 @@ class PlaySongsFunction:
     def __init__(self) -> None:
         self.image_to_song_api = ImageToSongAPIWrapper()
 
-    def select_song(self, image: cv2.MatLike):
+    def select_song(self, image: np.ndarray) -> str:
         songs = self.image_to_song_api.image_to_song(image)
         song_id = None
         for song in songs["song_list"]:
