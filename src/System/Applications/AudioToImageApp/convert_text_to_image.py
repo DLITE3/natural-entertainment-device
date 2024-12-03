@@ -1,18 +1,18 @@
+from pathlib import Path
 import sys
+sys.path.append(str(Path(__file__).resolve().parent.parent.parent.parent.parent))
+
+from src.Wrapper.APIWrapper.stable_diffusion_api_wrapper import StableDiffusionWrapper
+
 import os
 import base64
-sys.path.append(os.getcwd())
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../')))
-from src.Wrapper.APIWrapper.stable_diffusion_api_wrapper import StableDiffusionWrapper
 
 class ConvertTexrToImage:
      def __init__(self):
-          self.api_handler = StableDiffusionWrapper()
-
-
+          self.stable_diffusion_api_wrapper = StableDiffusionWrapper()
           
-     def send_to_stable_diffusion( self , response):
-         generate = self.api_handler.post_data(self, response)
+     def send_to_stable_diffusion(self , response):
+         generate = self.stable_diffusion_api_wrapper.post_data(self, response)
          base64_image = generate.get("image")
          if base64_image:
                 # Base64文字列をバイナリデータに変換
