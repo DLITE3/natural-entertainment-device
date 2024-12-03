@@ -6,25 +6,16 @@ from src.Wrapper.APIWrapper.stable_diffusion_api_wrapper import StableDiffusionW
 
 import os
 import base64
+import time
 
-class ConvertTexrToImage:
-     def __init__(self):
-          self.stable_diffusion_api_wrapper = StableDiffusionWrapper()
+class TexrToImage:
+    def __init__(self):
+        self.stable_diffusion_api_wrapper = StableDiffusionWrapper()
           
-     def send_to_stable_diffusion(self , response):
-         generate = self.stable_diffusion_api_wrapper.post_data(self, response)
-         base64_image = generate.get("image")
-         if base64_image:
-                # Base64文字列をバイナリデータに変換
-                image_data = base64.b64decode(base64_image)
-
-                # 画像ファイルとして保存
-                with open("output_image.jpeg", "wb") as f:
-                    f.write(image_data)
-                print("画像が保存されました: output_image.jpeg")
-         else:
-                print("画像データがレスポンスに含まれていません。")
-
-         
-         
+    def generate_image(self, query: str) -> None:
+        prompt = self.stable_diffusion_api_wrapper.text_to_image(query)
+        image = stable_diffusion_api_wrapper.text_to_image(prompt)
+        if image:
+            stable_diffusion_api_wrapper.save_generate_image(image.get("image"))
+            time.sleep(0.5)
         
