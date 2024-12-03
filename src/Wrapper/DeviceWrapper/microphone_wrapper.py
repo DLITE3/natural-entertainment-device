@@ -78,5 +78,5 @@ class MicrophoneWrapper:
 
         print(f"Filtered file saved as {self.output_file}.")
 
-    def close(self):
+    def stop(self):
         self.audio.terminate()

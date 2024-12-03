@@ -21,7 +21,7 @@ class PictureFunction:
         image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
         self.display.show_image(image)
 
-    def get_picuture(self) -> cv2.MatLike:
+    def get_picture(self) -> np.ndarray:
         print("take picture")
         self.camera.take_picture()
         time.sleep(1)
