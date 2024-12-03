@@ -6,7 +6,7 @@ sys.path.append(os.getcwd())
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../')))
 from src.Wrapper.APIWrapper.openai_api_handler import OpenAIAPIHandler
 
-@patch("my_module.requests.post")  # requests.post をモックする
+@patch("src.Wrapper.APIWrapper.openai_api_handler.OpenAIAPIHandler.post_request")  # requests.post をモックする
 def test_post_request(mock_post):
     # モックレスポンスを設定
     mock_response = mock_post.return_value
@@ -25,7 +25,7 @@ def test_post_request(mock_post):
         handler.api_url,  # 環境変数から設定されたURL
         json={
             "query": query,
-            "additional_text": "この音を聞くと、どのような感情を受け取りますか？\nstable diffusionにテキストをそのまま使うので、stable diffusionが入力しやすい形だけで答えてください。"
+            
         }
     )
 
