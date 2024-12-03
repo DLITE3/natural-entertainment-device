@@ -1,16 +1,18 @@
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 import requests
 import base64
 from io import BytesIO
 from PIL import Image
-from dotenv import load_dotenv
-import os
-load_dotenv()
 
 class StableDiffusionWrapper:
-    def __init__(self ):
-        self.api_url = os.getenv("STABLE_DIFFUSION_API_URL")
-        if not self.api_url:
-            raise ValueError("STABLE_DIFFUSION_API_URL が設定されていません。")
+    def __init__(self):
+        self.stable_diffusion_api_url = os.getenv("STABLE_DIFFUSION_API_URL")
+        if self.stable_diffusion_api_url == None:
+            raise ValueError("STABLE_DIFFUSION_API_URL is None.")
 
     def base64_to_image(self, base64_string: str) -> Image.Image:
         """
@@ -25,11 +27,21 @@ class StableDiffusionWrapper:
             print(f"Error decoding Base64 string: {e}")
             raise
 
-    def post_data(self, prompt: str) -> Image.Image:
-        """
-        Stable Diffusion APIにプロンプトを送信して画像を生成する
-        """
-        data = {"query": prompt}
-        response = requests.post(self.api_url, json=data)
+    def text_to_image(self, prompt: str) -> Image.Image:
+        data = {
+            "query": prompt
+        }
+        response = requests.post(self.stable_diffusion_api_url, json=data)
         return response.json()
 
+    def save_generate_image(self, base64_image: str) -> None:
+        if base64_image:
+            # Base64文字列をバイナリデータに変換
+            image_data = base64.b64decode(base64_image)
+
+            # 画像ファイルとして保存
+            with open("output_image.jpeg", "wb") as f:
+                f.write(image_data)
+            print("画像が保存されました: output_image.jpeg")
+        else:
+            print("画像データがレスポンスに含まれていません。")
