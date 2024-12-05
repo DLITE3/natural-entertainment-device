@@ -1,3 +1,4 @@
+from adafruit_rgb_display.rgb import color565
 from adafruit_rgb_display.ili9341 import ILI9341
 from busio import SPI
 from digitalio import DigitalInOut
@@ -62,6 +63,14 @@ class DisplayWrapper:
         if self.connected:
             # 画像を表示
             self.disp.image(pil_image)
+
+    def draw_rect(self, x: int, y: int, width: int, height: int, color) -> None:
+        if self.connected:
+            self.disp.fill_rectangle(x, y, width, height, color)
+
+    def fill(self, color) -> None:
+        if self.connected:
+            self.disp.fill(color)
 
     def stop(self) -> None:
         if self.connected:

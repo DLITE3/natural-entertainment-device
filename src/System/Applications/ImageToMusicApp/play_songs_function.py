@@ -4,13 +4,14 @@ sys.path.append(str(Path(__file__).resolve().parent.parent.parent.parent.parent)
 
 from Wrapper import *
 import cv2
+import asyncio
 import time
 
 class PlaySongsFunction:
     def __init__(self) -> None:
         self.image_to_song_api = ImageToSongAPIWrapper()
 
-    def select_song(self, image: np.ndarray) -> str:
+    async def select_song(self, image) -> str:
         songs = self.image_to_song_api.image_to_song(image)
         song_id = None
         for song in songs["song_list"]:

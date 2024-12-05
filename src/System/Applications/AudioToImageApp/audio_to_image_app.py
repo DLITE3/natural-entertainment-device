@@ -62,5 +62,4 @@ class AudioToImageApp(App):
 
     def stop(self):
         self.display.stop()
-        self.buttons.stop()
         self.mic.stop()

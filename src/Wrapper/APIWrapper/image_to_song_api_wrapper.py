@@ -17,6 +17,8 @@ class ImageToSongAPIWrapper:
             self.image_to_song_api_url,
             files={"file": image}
         )
+        print("status_code: " + str(response.status_code))
+        print(response.text)
 
         json_string_match = re.findall(r'\[.*?\]', response.text, re.DOTALL)
 

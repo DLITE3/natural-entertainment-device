@@ -33,7 +33,7 @@ class ImageToMusicApp(App):
             # 撮影ボタンが押されたら
             if self.buttons_data[27] == 0:
                 # 画像を取得
-                image = self.picture_func.get_picuture()
+                image = self.picture_func.get_picture()
                 # 画像から曲を検索
                 song_id = self.play_song_func.select_song(image)
                 # 曲を再生
@@ -48,6 +48,5 @@ class ImageToMusicApp(App):
     def stop(self):
         self.camera.stop()
         self.display.stop()
-        self.buttons.stop()
         self.play_song_func.stop()
         
