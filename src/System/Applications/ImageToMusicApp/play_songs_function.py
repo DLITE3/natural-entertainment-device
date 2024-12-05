@@ -10,11 +10,16 @@ import time
 class PlaySongsFunction:
     def __init__(self) -> None:
         self.image_to_song_api = ImageToSongAPIWrapper()
+        self.spotify_web_api = SpotifyWebAPIWrapper()
+        self.device_id = None
 
-    async def select_song(self, image) -> str:
+    def select_song(self, image) -> str:
         songs = self.image_to_song_api.image_to_song(image)
         song_id = None
-        for song in songs["song_list"]:
+        
+        songs_list = tuple(reversed(songs["song_list"]))
+
+        for song in songs_list:
             print(song)
             song_id = self.spotify_web_api.search_track(song)
             time.sleep(0.5)

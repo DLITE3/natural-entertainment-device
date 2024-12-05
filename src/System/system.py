@@ -46,11 +46,11 @@ class System:
                     self.display.show_image(image)
                     buttons_data = self.buttons.read_multiple_buttons()
 
-                    if buttons_data[23] == 0:
+                    if buttons_data[22] == 0:
                         self.app_index = 0
-                    elif buttons_data[22] == 0:
-                        self.app_index = 1
                     elif buttons_data[27] == 0:
+                        self.app_index = 1
+                    elif buttons_data[17] == 0:
                         self.display.fill(color565(0, 0, 0))
                         break
                     time.sleep(0.1)

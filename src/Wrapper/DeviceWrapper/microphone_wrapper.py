@@ -77,6 +77,7 @@ class MicrophoneWrapper:
             wf.writeframes(filtered_audio.astype(np.int16).tobytes())
 
         print(f"Filtered file saved as {self.output_file}.")
+        self.stop()
 
     def stop(self):
         self.audio.terminate()

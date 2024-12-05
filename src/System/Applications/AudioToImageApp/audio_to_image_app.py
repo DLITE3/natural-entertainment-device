@@ -24,9 +24,7 @@ class AudioToImageApp(App):
     def run(self) -> None:
         if not self.display.is_connected():
             return
-        try:
-            # 画面表示
-
+        try: 
             try:
                 # ボタンの読み込み
                 self.buttons_data = self.buttons.read_multiple_buttons()
@@ -34,7 +32,7 @@ class AudioToImageApp(App):
             except Exception as e:
                 print(e)
             # 録音ボタンが押されたら
-            if self.buttons_data[27] == 0:
+            if self.buttons_data[17] == 0:
                 time.sleep(0.5)
                 # 環境音を収音
                 if self.mic.search_microphone():
@@ -58,7 +56,7 @@ class AudioToImageApp(App):
             self.stop()
 
     def is_finish(self) -> bool:
-        return self.buttons_data[17] == 0
+        return self.buttons_data[22] == 0
 
     def stop(self):
         self.display.stop()

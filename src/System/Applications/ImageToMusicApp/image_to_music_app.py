@@ -31,22 +31,21 @@ class ImageToMusicApp(App):
             # print(self.buttons_data)
 
             # 撮影ボタンが押されたら
-            if self.buttons_data[27] == 0:
+            if self.buttons_data[17] == 0:
                 # 画像を取得
                 image = self.picture_func.get_picture()
                 # 画像から曲を検索
                 song_id = self.play_song_func.select_song(image)
                 # 曲を再生
-                self.play_song_func.play_song(song_id, "Smartphone")
+                self.play_song_func.play_song(song_id, "Computer")
         except Exception as e:
             print(e)
             self.stop()
 
     def is_finish(self) -> bool:
-        return self.buttons_data[17] == 0
+        return self.buttons_data[22] == 0
     
     def stop(self):
-        self.camera.stop()
         self.display.stop()
         self.play_song_func.stop()
         

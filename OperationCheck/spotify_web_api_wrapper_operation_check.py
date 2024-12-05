@@ -12,7 +12,8 @@ def main():
     track_info = spotify_handler.search_track(query)
     print("song id: " + track_info)
     devices = spotify_handler.get_devices()
-    smart_phone_device_id = spotify_handler.search_device("Smartphone", devices)
+    print(devices)
+    smart_phone_device_id = spotify_handler.search_device("Computer", devices)
     print("Smartphone id: " + smart_phone_device_id)
     if smart_phone_device_id and track_info:
         try:

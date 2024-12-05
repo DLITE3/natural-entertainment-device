@@ -25,6 +25,6 @@ class PictureFunction:
         print("take picture")
         self.camera.take_picture()
         time.sleep(1)
-        image = cv2.imread("image.jpg")
-        time.sleep(0.5)
-        return image
+        with open("image.jpg", "rb") as image:
+            image_data = image.read()  # ファイル内容をメモリに読み込む
+        return np.frombuffer(image_data, dtype=np.uint8)  # 必要に応じて型変換
