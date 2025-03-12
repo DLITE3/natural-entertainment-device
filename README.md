@@ -10,10 +10,10 @@ https://youtu.be/cLoC10NPXEc
 
 ## 詳細
 - 発表スライド（弊グループ部分のみ）
-  - 後で追記
+  - https://dlite3-natural-entertainment-device.pages.dev/
 - ポスター
-  - 後で追記
- 
+  - [自然エンタメ班.pdf](https://github.com/user-attachments/files/19204717/default.pdf)
+
 ## リンク集
 - プログラム関連
   - Made in Hono API
