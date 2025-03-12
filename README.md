@@ -16,6 +16,8 @@ https://youtu.be/cLoC10NPXEc
 
 ## リンク集
 - プログラム関連
+  - 設計
+    - https://drive.google.com/file/d/1Tnkv3CQGh62eIzVReJAE35U8LaEGRNK0/view?usp=sharing
   - Made in Hono API
     - https://github.com/DLITE3/stable-diffusion-wrapper-api
     - https://github.com/DLITE3/open-ai-wrapper-api
