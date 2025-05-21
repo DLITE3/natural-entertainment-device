@@ -26,3 +26,5 @@ https://youtu.be/cLoC10NPXEc
     - https://github.com/DLITE3/pytest_mock_sample
 - 議事録・メモ
   - https://scrapbox.io/dlite3-general-group/
+- 振り返り（KPT）
+  - https://www.figma.com/board/GMQe2mDrc49Bho9CSoU7sp/Untitled?t=pWrGoSTsS9sinxmu-1
